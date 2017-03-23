@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.5.0'
+    }
+}
+apply plugin: 'com.android.library'
+android {
+
+    def KEY_PATH = '';
+    def AAR_PATH = '';
+
+    if (System.getProperty('os.name').contains('Windows')) {
+        KEY_PATH = '' + rootDir + '\\key\\';
+        AAR_PATH = '' + rootDir + '\\..\\Assets\\Plugins\\Android\\';
+    } else {
+        KEY_PATH = '' + rootDir + '/key/';
+        AAR_PATH = '' + rootDir + '/../Assets/Plugins/Android/';
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    assembleRelease.doLast {
+        copy {
+            from('build/outputs/aar') {
+                include '*.aar'
+            }
+            into AAR_PATH
+        }
+    }
+
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFile getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+}
+
+dependencies {
+}
